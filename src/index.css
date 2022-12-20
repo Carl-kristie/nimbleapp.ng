@@ -1,13 +1,175 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*{
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body{
+  width: 100%;
+  height: 100%;
+  margin: 0%;
+  padding: 0%;
+}
+
+
+/* Registration Section */
+.register{
+  width: 100%;
+  margin: 0%;
+  padding: 0%;
+  height: 100%;
+  position: relative;
+  padding-top: 4.5%;
+  padding-bottom: 10%;
+  
+}
+
+.register::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 55%;
+  background: linear-gradient(186.95deg,#f46b03 -65.58%, rebeccapurple);
+  opacity: .3;
+  filter: blur(100px);
+  background-position: 100% 0;
+  z-index: -1;
+}
+
+.register>.logo{
+  display: grid;
+  place-items: center;
+  background: radial-gradient(rebeccapurple, rgb(56, 1, 56));
+  box-shadow: 0 0 5px purple;
+  font-weight: bold;
+  font-size: 20px;
+  width: 6%;
+  margin: auto;
+  height: 2em;
+  border-radius: 20%;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 2%;
+}
+
+.register>h2{
+  text-align: center;
+  font-size: 28px;
+  font-family: arial;
+  color: rgba(0, 0, 0, 0.8);
+  margin: 0%;
+  margin-bottom: 3%;
+  height: fit-content;
+  margin-bottom: 2.5%;
+}
+
+.register>form{
+  width: 30%;
+  height: 43em;
+  margin: auto;
+  display: grid;
+  row-gap: 15px;
+}
+
+.register>.form2{
+  height: 19em;
+  margin-top:5%;
+}
+
+label{
+  height: 0;
+  font-size: 15px;
+  padding: 0%;
+  margin: 0%;
+  font-family: arial;
+}
+
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+-moz-appearance: textfield;
+}
+
+select{
+  height: 3.5em;
+  outline: none;
+  border: 1.5px solid rgba(56, 1, 56, 0.3);
+  transition: .6s all ease;
+  border-radius: 5px;
+}
+
+input{
+  height: 3em;
+  border: 1.5px solid rgba(56, 1, 56, 0.3);
+  transition: .6s all ease;
+  border-radius: 5px;
+  outline: none;
+  padding: 1.5em;
+  font-size: 15px;
+}
+
+input:focus{
+  border: 1.6px solid rgba(56, 1, 56, 1);
+  transition: .6s all ease;
+}
+
+.phone{
+  display: grid;
+  grid-template-columns: 28% 70%;
+  height: 150%;
+  column-gap: 2%;
+  padding-bottom: 8%;
+}
+
+.phone>label{
+  grid-column: span 2;
+}
+
+.button{
+  all: unset;
+  background-color: rebeccapurple;
+  color: white;
+  display: grid;
+  place-items: center;
+  height: 3em;
+  border-radius: 5px;
+  text-align: center;
+  font-family: arial;
+}
+
+.reset{
+  display: grid;
+  place-items: right;
+  width: 100%;
+  text-align: right;
+
+}
+
+a{
+  text-decoration: none;
+  font-family: arial;
+  font-size: 15px;
+  color: rebeccapurple;
+}
+
+.logreg{
+  display: grid;
+  width: 30%;
+  text-align: center;
+  margin: auto;
+  border: none;
+  background: none;
+  color: rebeccapurple;
+  font-size: 15px;
+  font-family: arial;
+  margin-top: 1%;
+  cursor: pointer;
 }
