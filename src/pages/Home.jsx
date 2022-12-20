@@ -27,7 +27,17 @@ export default function Home() {
 
             </div>
             <div className="home-right">
-
+                <div className="chat-header">
+                    <div className="avatar message-avatar"></div>
+                    <div className="message-chat-name"></div>
+                    <div className="message-options"></div>
+                </div>
+                <div className="chats">
+                    <div className="message-items"></div>
+                </div>
+                <div className="chat-footer">
+                    
+                </div>
             </div>
         </section>
     </div>
