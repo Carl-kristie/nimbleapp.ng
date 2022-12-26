@@ -1,8 +1,11 @@
+
+import logobg from "../images/logobg.png"
+
 const Login = () => {
     return ( 
         <div>
             <section className="register">
-                <div className="logo">YesPay</div>
+                <div className="logo"><img src={logobg} alt="" /></div>
                 <h2>Welcome Back</h2>
                 <form action="" className="form2">
                     <label for="email">Your Email</label>
