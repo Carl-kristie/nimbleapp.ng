@@ -1,0 +1,2 @@
+figure out a way to add and change profile picture
+create 3 admin profiles with a different user database

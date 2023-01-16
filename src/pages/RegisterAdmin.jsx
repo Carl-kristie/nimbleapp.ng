@@ -17,29 +17,22 @@ const Register = () => {
     const [err, setErr] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const firstName = e.target[0].value
-        const lastName = e.target[1].value
-        const displayName = e.target[2].value
-        const email = e.target[3].value
-        const countryCode = e.target[4].value
-        const phone = e.target[5].value
-        const password = e.target[6].value
+        const displayName = e.target[0].value
+        const email = e.target[1].value
+        const phone = e.target[2].value
+        const password = e.target[4].value
         let photoURL = defaultImage
        
 
         
        try {
         const res = await createUserWithEmailAndPassword(auth, email, password)
-        await setDoc(doc(db, "users", res.user.uid),{
+        await setDoc(doc(db, "admins", res.user.uid),{
             uid: res.user.uid,
-            firstName,
-            lastName,
             displayName,
             email,
-            countryCode,
             phone,
             photoURL,
-            password
        })
 
        await setDoc(doc(db, "userChats", res.user.uid), {})
@@ -56,10 +49,6 @@ const Register = () => {
     <h2>Create Your Account</h2>
     {err && <span>Something went wrong</span>}
     <form onSubmit={handleSubmit}>
-        <label for="firstname">First Name</label>
-        <input type="text" name="firstname" id="firstname"/>
-        <label for="lastname">Last Name</label>
-        <input type="text" name="lastname" id="lastname"/>
         <label for="firstname">Username</label>
         <input type="text" name="username" id="username"/>
         <label for="email">Your Email</label>

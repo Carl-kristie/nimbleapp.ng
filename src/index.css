@@ -431,7 +431,6 @@ a{
     height:6em;
    font-family: hanken grotesk;
     align-items: center;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
     padding: 1%;
     padding-left: 4%;
     margin: 0%;
@@ -440,6 +439,10 @@ a{
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
+  .message-item:hover{
+    background-color: rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+  }
 
 
   .first-col{
@@ -482,4 +485,166 @@ a{
 
   .third-col{
     font-size: 13px;
+  }
+
+  .message-options{
+   position: relative;
+   width: 100%;
+    cursor: pointer;
+
+  }
+
+  .contact-info{
+    position: absolute;
+    display: grid;
+    grid-template-columns: 85% 15%;
+    width: 150%;
+    top: 100%;
+    left: -100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: .5em;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    transition: .5s all ease;
+  }
+
+  .contact-info>svg{
+    border: 1px solid black;
+    border-radius: 50%;
+  }
+
+  .contact-info:hover{
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: none;
+  }
+
+  .profile-details{
+    position: absolute;
+    width: 30em;
+    height: 20em;
+    background-color: white;
+    display: grid;
+    align-self: center;
+    left: 35%;
+    place-items: center;
+    display: none;
+    grid-template-rows: 30% 25% 11% 6% 6% 16%;
+    font-family: hanken grotesk;
+    border-radius: 20px;
+  }
+
+  .profile-photo{
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+
+  .profile-photo>img{
+    width: 100%;
+    height:100%;
+  }
+
+  .profile-details>*{
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .profile-details>.logout-btn{
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 1%;
+    width: 6em;
+    cursor: pointer;
+  }
+
+  .x{
+    width: 1.3em;
+    position: absolute;
+    top: 5%;
+    right: 4%;
+    height: 1.3em;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.5);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    padding: 0%;
+  }
+
+  .loading{
+    opacity: 0;
+  }
+
+  .setting-container{
+    display: grid;
+    position: absolute;
+    background-color: red;
+  }
+
+  .settings{
+    width: 30em;
+    height: 25em;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background-color: white;
+    font-family: hanken grotesk;
+    gap: 0;
+    padding-bottom: 3%;
+  }
+
+  .settings>*{
+    width: 100%;
+    padding-left: 5% ;
+  }
+
+  .settings>.h3{
+    font-size: 25px;
+    text-align: center;
+    padding: 0%;
+  }
+
+  .title{
+    color: rgba(0, 0, 0, 0.7);
+    
+  }
+
+  /* Users */
+  .user-item{
+    height: 6em;
+    border: 1px;
+    grid-template-columns: 19% 80%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  }
+
+  .user-photo{
+    width: 3em;
+    height: 3em;
+  }
+
+  .display-name{
+    height: 100%;
+    display: grid;
+    align-items: center;
+    font-weight: 600;
+    font-size: 16.5px;
   }
