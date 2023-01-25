@@ -256,6 +256,7 @@ a{
   border-radius: 50%;
   display: grid;
   place-items: center;
+  cursor: pointer;
 }
 
 .search-messages{
@@ -396,6 +397,7 @@ a{
   height: 100%;
   width: 100%;
   overflow-y: auto;
+  background-color: white;
 }
 
 .message-items{
@@ -528,7 +530,7 @@ a{
     display: grid;
     place-items: center;
     background-color: rgba(0, 0, 0, 0.1);
-    display: none;
+    transform: scale(0);
   }
 
   .profile-details{
@@ -540,7 +542,7 @@ a{
     align-self: center;
     left: 35%;
     place-items: center;
-    display: none;
+    transform: scale(0);
     grid-template-rows: 30% 25% 11% 6% 6% 16%;
     font-family: hanken grotesk;
     border-radius: 20px;
@@ -647,4 +649,14 @@ a{
     align-items: center;
     font-weight: 600;
     font-size: 16.5px;
+  }
+
+  .translatezero{
+    transform: translateX(-100%);
+    transition: .5s all ease;
+  }
+
+  .translatefull{
+    transform: translateX(0%);
+    transition: .5s all ease;
   }

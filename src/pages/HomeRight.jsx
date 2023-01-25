@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState, createContext, useContext } from "react";
 import defaultImage from "../images/user.png"
-import { createPicker} from 'picmo'
-import { createPopup } from '@picmo/popup-picker';
+// import { createPicker} from 'picmo'
+// import { createPopup } from '@picmo/popup-picker';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase'
 import { AuthContext } from '../context/AuthContext';
 import { db } from "../firebase";
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { async } from '@firebase/util';
 
@@ -16,19 +16,30 @@ const HomeRight = () => {
     const user = useContext(AuthContext)
     const {currentUser} = useContext(AuthContext)
     const [userInfo, setUserInfo] = useState(null)
+    const [chats, setChats] = useState([])
+
+
+    function checkCurrentUser() {
+        console.log(currentUser.uid)
+    }
+
+    currentUser && checkCurrentUser()
+
 const fetchUserData = async() =>{
-    const docRef = doc(db, "users", "TqsRq1vUWQW4nAdWB1AHQHUtiGG2");
-    const docSnap = await getDoc(docRef);
+    function fetching() {
+        const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = getDoc(docRef);
     if (docSnap.exists()) {
       setUserInfo(docSnap.data())
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
+    }
+    currentUser && fetching()
 }
         useEffect(() => {
             fetchUserData()
-            console.log(userInfo)
         }, [])
         
   
@@ -40,15 +51,24 @@ const fetchUserData = async() =>{
         document.getElementById("contactInfo").style.display = "grid";
     }
     function showProfile(){
-        document.querySelector(".profile-container").style.display = "block"
-        document.querySelector(".profile-details").style.display = "grid"
+        document.getElementById("profile-container").style.display = "block"
+        document.getElementById("profile-details").style.display = "grid"
     }
 
     function closeProfile() {
-        document.querySelector(".profile-container").style.display = "none"
-        document.querySelector(".profile-details").style.display = "none"
+        document.getElementById("profile-container").style.display = "none"
+        document.getElementById("profile-details").style.display = "none"
     }
 
+    useEffect(() => {
+        function getChats() {
+            const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+                setChats(doc.data());
+            });
+        }
+        currentUser.uid && getChats()
+    }, [currentUser.uid])
+    
 
     return ( 
         <div className="home-right">
@@ -73,18 +93,7 @@ const fetchUserData = async() =>{
             </div>
             <div className="record-voice"><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#008000" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><rect x="88" y="24" width="80" height="144" rx="40" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></rect><line x1="128" y1="200" x2="128" y2="232" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M199.6,136a72.1,72.1,0,0,1-143.2,0" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div>
         </div>
-        <div className="profile-container" onClick={closeProfile}>
-        </div>
-        {userInfo ? <div className="profile-details">
-            <h3>Customer's Details</h3>
-            <div className="profile-photo"><img src={userInfo.photoUrl} alt="" /></div>
-            <div className="displayName">{userInfo.displayName}</div>
-            <div className="phone-num">{userInfo.phone}</div>
-            <div className="email">{userInfo.email}</div>
-            <div className="logout-btn" onClick={()=>signOut(auth)}>logout</div>
-            <div className="x" onClick={closeProfile}>x</div>
-
-            </div>: <span className='loading'>Loading...</span>}
+        
            
     </div>
      );
