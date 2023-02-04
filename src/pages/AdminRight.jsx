@@ -12,7 +12,7 @@ import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
 
 
-const HomeRight = () => {
+const AdminRight = () => {
     const user = useContext(AuthContext)
     const {currentUser} = useContext(AuthContext)
     const {data} = useContext(ChatContext)
@@ -32,7 +32,7 @@ const HomeRight = () => {
 
 function fetchUserData() {
     function checkifavailiable() {
-      getDoc(doc(db, "users", currentUser.uid)).then(docSnap => {
+      getDoc(doc(db, "admins", currentUser.uid)).then(docSnap => {
         if (docSnap.exists()) {
           setUserInfo(docSnap.data());
         } else {
@@ -65,7 +65,7 @@ function fetchUserData() {
 
     function goBack() {
         
-  document.getElementById("headerRight").style.display = "none"
+  document.getElementById("avatar").style.opacity = 0
   document.getElementById("homeleft").style.display = "grid"
   document.getElementById("homeright").style.display = "none"
     }
@@ -81,7 +81,7 @@ function fetchUserData() {
 
     return ( 
         <div className="home-right" id='homeright'>
-        <div className="chat-header" id='headerRight'>
+        <div className="chat-header">
             <div className='back-btn' id='backbtn' onClick={goBack}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><line x1="216" y1="128" x2="40" y2="128" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><polyline points="112 56 40 128 112 200" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg></div>
             <div className='chat-details'>
             <div className="avatar message-avatar" id='avatar'><img src={data.user?.photoURL} alt="" /></div>
@@ -101,7 +101,7 @@ function fetchUserData() {
             </div>
         </div>
         <div className="chat-footer">
-            <div className="import-media"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h96l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><polyline points="152 32 152 88 208 88" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="152" x2="152" y2="152" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="128" y1="128" x2="128" y2="176" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg><input type="file" name="file" id="file"/></div>
+            <div className="import-media">+</div>
             <div className="chat-input">
                 <div id="picker"><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="96" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle><circle cx="92" cy="108" r="12"></circle><circle cx="164" cy="108" r="12"></circle><path d="M169.6,152a48.1,48.1,0,0,1-83.2,0" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div>
                 <input type="text" name="message" id="message" />
@@ -125,4 +125,4 @@ function fetchUserData() {
      );
 }
 
-export default HomeRight;
+export default AdminRight;

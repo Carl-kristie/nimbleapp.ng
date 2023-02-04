@@ -21,7 +21,7 @@ import {
 
 
 
-const HomeLeft = () => {
+const AdminLeft = () => {
     const[username, setUsername] = useState("")
     const [user, setUser] = useState(null)
     const [admins, setAdmins] = useState([])
@@ -37,7 +37,7 @@ const HomeLeft = () => {
     const handleSearch = async () => {
             
       const q = query(
-        collection(db, "users"),
+        collection(db, "admins"),
         where("displayName", "==", username)
       );
       
@@ -55,7 +55,7 @@ const HomeLeft = () => {
 
     const fetchAdmins = async () => {
       const q = query(
-        collection(db, "admins")
+        collection(db, "users")
       );
       
   
@@ -65,7 +65,10 @@ const HomeLeft = () => {
         querySnapshot.forEach(element => {
           var data = element.data();
           setAdmins(arr => [...arr , data]);
+          
       });
+      setAdmins([...new Set(admins)])
+      console.log(admins, admins.length)
       } catch (err) {
         setErr(true);
       }
@@ -79,35 +82,9 @@ const handleKey = (e) => {
 }
 
 const [userInfo, setUserInfo] = useState(null)
-// const fetchUserData = async (e) => {
-
-//   function checkifavailiable() {
-//     const docRef = doc(db, "users", currentUser.uid);
-//   try {
-//       const docSnap = getDoc(docRef);
-//       console.log(docSnap)
-//       console.log(docSnap.data)
-//       if(docSnap.exists()) {
-//         
-//       } else {
-//           console.log("Document does not exist")
-//       }
-      
-      
-  
-//   } catch(error) {
-//       console.log(error)
-//       console.log("there was an error")
-//       console.log(currentUser.uid)
-//   }
-//   }
-//   currentUser.uid && checkifavailiable()
-
-// }
-
 function fetchUserData() {
   function checkifavailiable() {
-    getDoc(doc(db, "users", currentUser.uid)).then(docSnap => {
+    getDoc(doc(db, "admins", currentUser.uid)).then(docSnap => {
       if (docSnap.exists()) {
         setUserInfo(docSnap.data());
       } else {
@@ -123,7 +100,7 @@ function fetchUserData() {
 
 const fetchCurrentAdmin = async (e) => {
 
-  const admin = collection(db, "admins")
+  const admin = collection(db, "users")
   const q = query(
     admin,
     where("displayName", "==", e.target.innerHTML)
@@ -206,16 +183,9 @@ function openAdmins() {
 
 const openChat = (u) => {
   dispatch({ type: "CHANGE_USER", payload: u });
-  document.getElementById("headerRight").style.display = "grid"
-  console.log(window.screen.availWidth)
-  if (window.screen.availWidth < "900") {
-
+  document.getElementById("avatar").style.opacity = 1
   document.getElementById("homeleft").style.display = "none"
   document.getElementById("homeright").style.display = "grid"
-  } 
-  else{
-    document.getElementById("homeright").style.display = "grid"
-  }
 };
 
 useEffect(() => {
@@ -224,6 +194,7 @@ fetchUserData()
 
 useEffect(() => {
   fetchAdmins()
+
 }, [])
 
     return ( 
@@ -257,8 +228,8 @@ useEffect(() => {
 
     
 <div className="messages users translatezero" id='users'>
-      {admins?
-      admins.slice(0,3).map((element) => {
+      {admins? 
+      admins.map((element) => {
         return <div className="message-item user-item" onClick={handleSelect} key={element.uid}>
       <img src={element.photoURL} alt="" className="profile-photo user-photo" />
       <div className="display-name">{element.displayName}</div>
@@ -294,4 +265,4 @@ useEffect(() => {
      );
 }
  
-export default HomeLeft;
+export default AdminLeft;

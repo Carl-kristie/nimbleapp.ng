@@ -34,7 +34,6 @@ body{
   position: relative;
   padding-top: 4.5%;
   padding-bottom: 10%;
-  
 }
 
 .register::before{
@@ -234,6 +233,7 @@ a{
   height: 100%;
   grid-template-rows: 15% 7% 78%;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
   overflow: hidden;
 }
 
@@ -265,6 +265,7 @@ a{
   width: 92%;
   margin: auto;
   height: 44px;
+  position: relative;
   border-radius: 8px;
 }
 
@@ -296,11 +297,12 @@ a{
 }
 
 .chat-header{
-  display: grid;
-  grid-template-columns: 10% 80% 10%;
+  display: none;
+  grid-template-columns: 90% 10%;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+
 
 .avatar{
   width: 3em;
@@ -336,6 +338,7 @@ a{
 .import-media{
   display: grid;
   place-items: center;
+  cursor: pointer;
   width: 1.3em;
   height: 1.3em;
   color: green;
@@ -360,6 +363,7 @@ a{
   align-self: center;
   display: grid;
   place-items: center;
+  cursor: pointer;
 }
 
 .picker>*{
@@ -379,6 +383,7 @@ a{
   display: grid;
   place-items: center;
   align-self: center;
+  cursor: pointer;
   justify-self: left;
 }
 
@@ -527,10 +532,9 @@ a{
     height: 100%;
     top: 0;
     left: 0;
-    display: grid;
+    display: none;
     place-items: center;
     background-color: rgba(0, 0, 0, 0.1);
-    transform: scale(0);
   }
 
   .profile-details{
@@ -538,11 +542,10 @@ a{
     width: 30em;
     height: 20em;
     background-color: white;
-    display: grid;
+    display: none;
     align-self: center;
     left: 35%;
     place-items: center;
-    transform: scale(0);
     grid-template-rows: 30% 25% 11% 6% 6% 16%;
     font-family: hanken grotesk;
     border-radius: 20px;
@@ -652,11 +655,105 @@ a{
   }
 
   .translatezero{
-    transform: translateX(-100%);
+    transform: translate(-100%, -100%);
     transition: .5s all ease;
   }
 
   .translatefull{
-    transform: translateX(0%);
+    transform: translate(0%, 0%);
     transition: .5s all ease;
   }
+.users{
+  position: absolute;
+  top: 22%;
+}
+
+.messagesone{
+  position: relative;
+}
+
+
+
+.back-btn{
+  display: none;
+}
+
+.chat-details{
+  display:grid;
+  grid-template-columns: 15% 85%;
+  width: 100%;
+  align-items: center;
+}
+
+.import-media{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+.import-media>*{
+  position: absolute;
+  width: 90%;
+  height: 90%;
+}
+
+.import-media>input{
+  opacity: 0;
+}
+@media screen and (max-width: 900px) {
+    .home-right{
+      display: none;
+    }
+    .home{
+      grid-template-columns: 100%;
+    }
+
+    .contact-info{
+      width: 310%;
+      left: -200%;
+    }
+
+    .profile-details{
+      left: 10%;
+      width: 20em;
+      height: 20em;
+    }
+
+    .chat-input{
+      grid-template-columns: 12% 88%;
+    }
+
+    .chat-header{
+      padding-left: 2%;
+      grid-template-columns: 10% 80% 10%;
+    }
+
+    .back-btn{
+      display: block;
+    }
+
+    .chat-footer{
+      width: 99%;
+      grid-template-columns: 10% 80% 10%;
+      top: unset;
+      bottom: 0;
+    }
+    .register{
+      margin: auto;
+      margin-top: 10%;
+    }
+
+    .chat-details{
+      grid-template-columns: 20% 80%;
+    }
+    .register>form{
+      width: 70%;
+      margin-top:  10%;
+    }
+    .register>.form2{
+      width: 70%;
+      margin-top:  10%;
+    }
+
+}
