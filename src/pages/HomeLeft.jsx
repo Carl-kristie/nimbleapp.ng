@@ -173,6 +173,8 @@ const selectFunction = async () => {
         });
        
       }
+      document.getElementById("users").classList.remove("translatefull")
+
     } catch (err) {
       console.log(err)
     }

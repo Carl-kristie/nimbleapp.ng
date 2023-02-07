@@ -546,7 +546,7 @@ a{
     align-self: center;
     left: 35%;
     place-items: center;
-    grid-template-rows: 30% 25% 11% 6% 6% 16%;
+    grid-template-rows: 30% 20% 9% 11% 6% 6% 16%;
     font-family: hanken grotesk;
     border-radius: 20px;
   }
@@ -700,6 +700,20 @@ a{
 
 .import-media>input{
   opacity: 0;
+}
+
+.changepicbtn{
+  position: relative;
+  height: 100%;
+}
+
+.changepicbtn>*{
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 @media screen and (max-width: 900px) {
     .home-right{

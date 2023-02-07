@@ -3,11 +3,12 @@ import { useState, createContext, useContext } from "react";
 import defaultImage from "../images/user.png"
 // import { createPicker} from 'picmo'
 // import { createPopup } from '@picmo/popup-picker';
-import { signOut } from 'firebase/auth';
+import { signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase'
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/chatContext';
-import { db } from "../firebase";
+import { db, storage} from "../firebase";
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
 
@@ -19,6 +20,20 @@ const HomeRight = () => {
     const [userInfo, setUserInfo] = useState(null)
     const [chats, setChats] = useState([])
     const [messages, setMessages] = useState([])
+    const [text, setText] = useState("")
+    const [img, setImg] = useState(null)
+    const [file, setFile] = useState("");
+    const [percent, setPercent] = useState(0);
+    const [loading, setLoading] = useState();
+    const [message, setMessage] = useState('');
+    const [file2, setFile2] = useState(null);
+    const [previewURL, setPreviewURL] = useState(null);
+
+
+
+    function handleSend() {
+      
+    }
         
     useEffect(() => {
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -35,6 +50,7 @@ function fetchUserData() {
       getDoc(doc(db, "users", currentUser.uid)).then(docSnap => {
         if (docSnap.exists()) {
           setUserInfo(docSnap.data());
+
         } else {
           console.log("No such document!");
         }
@@ -43,8 +59,53 @@ function fetchUserData() {
     currentUser.uid && checkifavailiable()
   }
 
+  
+
+  const [fileURL, setFileURL] = useState(null);
+
+async function changePic(e) {
+  setFile(e.target.files[0]);
+  setLoading(true);
+
+  const storageRef = ref(storage, userInfo.displayName);
+  const uploadTask = uploadBytesResumable(storageRef, file);
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      const percent = Math.round(
+        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      );
+
+      setPercent(percent);
+    },
+    (err) => {
+      console.log(err);
+      setLoading(false);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+        updateProfile(auth.currentUser, {
+          photoURL: url
+        })
+          .then(() => {
+            console.log("profile updated");
+            console.log(currentUser.photoURL);
+            setFileURL(url); // Update the fileURL state with the URL
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+      });
+    }
+  );
+}
+
+
   useEffect(() => {
     fetchUserData()
+
 }, [currentUser])
     // 
     function hideContact() {
@@ -101,18 +162,20 @@ function fetchUserData() {
             </div>
         </div>
         <div className="chat-footer">
-            <div className="import-media"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h96l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><polyline points="152 32 152 88 208 88" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="152" x2="152" y2="152" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="128" y1="128" x2="128" y2="176" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg><input type="file" name="file" id="file"/></div>
+            <div className="import-media"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h96l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><polyline points="152 32 152 88 208 88" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="152" x2="152" y2="152" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="128" y1="128" x2="128" y2="176" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg><input type="file" name="file" id="file" onChange={(e) => setImg(e.target.files[0])}/></div>
             <div className="chat-input">
                 <div id="picker"><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="96" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle><circle cx="92" cy="108" r="12"></circle><circle cx="164" cy="108" r="12"></circle><path d="M169.6,152a48.1,48.1,0,0,1-83.2,0" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div>
-                <input type="text" name="message" id="message" />
+                <input type="text" name="message" id="message" onChange={(e)=>setText(e.target.value)} />
             </div>
-            <div className="record-voice"><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#008000" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M219.5,121,50.6,26.4a8,8,0,0,0-11.4,9.7L71,125.3a7.2,7.2,0,0,1,0,5.4L39.2,219.9a8,8,0,0,0,11.4,9.7L219.5,135A8,8,0,0,0,219.5,121Z" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><line x1="72" y1="128" x2="136" y2="128" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg></div>
+            <div className="record-voice" onClick={handleSend}><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#008000" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M219.5,121,50.6,26.4a8,8,0,0,0-11.4,9.7L71,125.3a7.2,7.2,0,0,1,0,5.4L39.2,219.9a8,8,0,0,0,11.4,9.7L219.5,135A8,8,0,0,0,219.5,121Z" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><line x1="72" y1="128" x2="136" y2="128" fill="none" stroke="#008000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg></div>
         </div>
         <div className="profile-container" onClick={closeProfile}>
         </div>
         {userInfo && <div className="profile-details">
             <h3>Customer's Details</h3>
-            <div className="profile-photo"><img src={userInfo.photoUrl} alt="" /></div>
+            <div className="profile-photo"><img src={fileURL? fileURL: currentUser.photoURL} alt="" /></div>
+            <button className='changepicbtn' >Change Profile Picture <input type="file"onChange={changePic}/></button>
+            {loading && <p>Uploading...</p>}
             <div className="displayName">{userInfo.displayName}</div>
             <div className="phone-num">{userInfo.phone}</div>
             <div className="email">{userInfo.email}</div>
