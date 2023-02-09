@@ -79,7 +79,7 @@ const Register = () => {
         <input type="password" name="password" required minLength={8} id="password"/>
         <label for="repassword">Re-enter Password</label>
         <input type="password" name="repassword" required minLength={8} id="repassword"/>
-        <button className="button">Continue</button> 
+        <button className="button" style={{color:"white"}}>Continue</button> 
         </form>
         <Link className="logreg" to="/login">Login</Link>
             </section>

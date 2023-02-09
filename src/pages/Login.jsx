@@ -41,7 +41,7 @@ const Login = () => {
                     <input type="password" name="password" id="password"/>
                     {err && <span style={{color:"red"}}>Incorrect email or password</span>}
                     <div className="reset"><a href="./resetpassword">Reset Password</a></div>
-                    <button className="button">Login</button>
+                    <button className="button" style={{color:"white"}}>Login</button>
                 </form>
                <Link className="logreg" to="/register">Register Your Account</Link>
             </section>
