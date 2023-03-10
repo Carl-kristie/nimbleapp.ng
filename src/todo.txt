@@ -1,2 +1,41 @@
-figure out a way to add and change profile picture
-create 3 admin profiles with a different user database
+
+  const [groupExists, setGroupExists] = useState(false);
+
+  useEffect(() => {
+    // Check if device group already exists
+    const deviceGroupRef = firebase.database().ref('device-group');
+    deviceGroupRef.once('value', snapshot => {
+      if (snapshot.exists()) {
+        setGroupExists(true);
+      }
+    });
+  }, []);
+
+  const createDeviceGroup = async () => {
+    if (groupExists) {
+      console.log('Device group already exists');
+      return;
+    }
+
+    // Create device group
+    const response = await fetch('https://fcm.googleapis.com/fcm/notification', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${yourServerKey}`,
+      },
+      body: JSON.stringify({
+        operation: 'create',
+        notification_key_name: 'your-device-group-name',
+        registration_ids: ['device-token-1', 'device-token-2'],
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    // Save device group in Firebase Realtime Database
+    const deviceGroupRef = firebase.database().ref('device-group');
+    deviceGroupRef.set(data.notification_key);
+
+    setGroupExists(true);

@@ -115,6 +115,11 @@ body{
   margin-top:5%;
 }
 
+.register>.resetform{
+  height: 13em;
+  margin-top: 6%;
+}
+
 label{
   height: 0;
   font-size: 15px;
@@ -252,7 +257,6 @@ a{
   height: 100%;
   grid-template-rows: 15% 7% 78%;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
-  position: relative;
   overflow: hidden;
 }
 
@@ -327,6 +331,7 @@ a{
   width: 3em;
   height: 3em;
   border-radius: 50%;
+  overflow: hidden;
   margin: auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -372,22 +377,13 @@ a{
   height: 70%;
   display: grid;
   place-items: center;
-  grid-template-columns: 5% 95%;
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   align-self: center;
 }
 
-#picker{
-  align-self: center;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
 
-.picker>*{
-  margin: auto;
-}
+
 
 .chat-input>input{
   width: 97%;
@@ -408,12 +404,15 @@ a{
 
 .chats{
   width: 100%;
-  height: 82%;
-  overflow: scroll;
+  max-height: 31rem;
+  scrollbar-color: black;
+  overflow-y: scroll;
+  display: flex;
+flex-direction: column-reverse;
 }
 
 .chats::-webkit-scrollbar{
-  display: none;
+  
 }
 
 .messages{
@@ -565,23 +564,77 @@ a{
     align-self: center;
     left: 35%;
     place-items: center;
-    grid-template-rows: 30% 20% 9% 11% 6% 6% 16%;
+    grid-template-rows: 20% 30% 9% 11% 6% 6% 16%;
     font-family: hanken grotesk;
     border-radius: 20px;
   }
 
   .profile-photo{
-    width: 5em;
-    height: 5em;
+    width: 3em;
+    height: 3em;
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.5);
     overflow: hidden;
   }
 
+  .profile-name{
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .profile-email{
+    font-size: 14px;
+  }
+
+  .caret{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+  }
+
+  .other-setting-item{
+    display: grid;
+    grid-template-columns: 90% 10%;
+    cursor: pointer;
+
+  }
+
+  .other-item{
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .profile-others{
+    display: grid;
+    align-items: center;
+    flex-direction: row;
+    }
+
   .profile-photo>img{
     width: 100%;
     height:100%;
   }
+
+.logout-btn{
+  width: 100%;
+  display: grid;
+  place-items: center;
+  margin-top: 10%;
+}
+
+.logout{
+  background-color: none;
+  cursor: pointer;
+  border: none;
+  width: fit-content;
+  height: 100%;
+  -webkit-text-fill-color: red;
+  font-size: 17px;
+  color: red;
+  margin: auto;
+}
+
 
   .profile-details>*{
     display: grid;
@@ -614,14 +667,21 @@ a{
     padding: 0%;
   }
 
+
+
   .loading{
     opacity: 0;
   }
 
   .setting-container{
-    display: grid;
+    display: none;
     position: absolute;
-    background-color: red;
+  }
+
+  .profile-settings{
+    display: grid;
+    grid-template-columns: 15% 75% 10%;
+    cursor: pointer;
   }
 
   .settings{
@@ -632,18 +692,25 @@ a{
     border-radius: 10px;
     background-color: white;
     font-family: hanken grotesk;
+    z-index: 10;
+    position: relative;
     gap: 0;
     padding-bottom: 3%;
+    display: none;
   }
 
   .settings>*{
     width: 100%;
-    padding-left: 5% ;
+    padding-left: 3% ;
+    text-align: left;
+    display: grid;
+    place-items: flex-start;
   }
 
   .settings>.h3{
     font-size: 25px;
-    text-align: center;
+    text-align: center !important;
+    place-items: center;
     padding: 0%;
   }
 
@@ -685,6 +752,7 @@ a{
 .users{
   position: absolute;
   top: 22%;
+  width: 30%;
 }
 
 .messagesone{
@@ -738,6 +806,9 @@ a{
 
 
 @media screen and (max-width: 900px) {
+  .message-chat-name{
+    padding-left: 5%;
+  }
     .home-right{
       display: none;
     }
@@ -745,19 +816,20 @@ a{
       grid-template-columns: 100%;
     }
 
+    .users{
+      width: 100%;
+    }
+
     .contact-info{
       width: 310%;
       left: -200%;
+
     }
 
     .profile-details{
       left: 10%;
       width: 20em;
       height: 20em;
-    }
-
-    .chat-input{
-      grid-template-columns: 12% 88%;
     }
 
     .chat-header{
@@ -767,6 +839,11 @@ a{
 
     .back-btn{
       display: block;
+    }
+
+    .xx{
+      top: 1em;
+      right: 1em;
     }
 
     .chat-footer{
@@ -784,12 +861,16 @@ a{
       grid-template-columns: 20% 80%;
     }
     .register>form{
-      width: 70%;
+      width: 88%;
       margin-top:  10%;
     }
     .register>.form2{
       width: 70%;
       margin-top:  10%;
+    }
+    .settings{
+      width: 23em;
+      height: 25em;
     }
 
 }
@@ -799,4 +880,223 @@ a{
   -webkit-text-fill-color: white;
   -webkit-opacity: 1;
   opacity: 1;
+}
+
+.changepicbtn{
+  background-color: midnightblue;
+}
+
+.chat-image{
+  width: 10em;
+  height: 10em;
+}
+
+.profile-setting-container{
+  height: 32em;
+}
+
+.profile-setting-form{
+  display: grid;
+  height:100%;
+  place-items: center;
+}
+
+.profile-setting-form>label{
+  all: unset;
+  text-align: left;
+}
+
+.profile-photo-container{
+  position: relative;
+  width: 3em;
+  height: 3em;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.profile-photo-container>*{
+  position: absolute;
+}
+
+.profile-photo-container>input{
+  transform: scale(2);
+  top: 90%;
+  z-index: 4;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.profile-photo-container>img{
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-photo-container>svg{
+  z-index: 3;
+  width: 30%;
+  height: 30%;
+  top: 70%;
+  left: 34%;
+}
+
+.profile-photo-setting{
+  display: grid;
+  place-items: center;
+}
+
+.profile-photo-setting>span{
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.profile-setting-form>label{
+  width: 70%;
+}
+
+.profile-setting-form>input{
+  width: 70% ;
+}
+
+.profile-setting-form>.phone{
+  padding-bottom: 0%;
+  height: 100%;
+  width: 70%;
+}
+
+.profile-setting-form>.button{
+  font-size: 13px;
+  padding: .2em .8em;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+.profile-setting-form{
+  position: relative;
+  padding: 0;
+}
+
+.profile-setting-form>svg{
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  cursor: pointer;
+}
+
+.password-container{
+  height: 25em;
+}
+
+.alert-container{
+  height: 15em;
+}
+
+.notification{
+  width: 90%;
+  display: grid;
+  grid-template-columns: 85% 15%;
+  align-items: center;
+}
+
+.xx{
+  width: 1.3em;
+  position: absolute;
+  top: 1em;
+  z-index: 11;
+
+  right: 1em;
+  height: 1.3em;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.5);
+  display: grid;
+  background-color: white;
+  place-content: center;
+  cursor: pointer;
+  padding: 0%;
+}
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.notification-header{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 1em;
+}
+
+
+.alert-setting-form{
+  padding: 0;
+}
+
+.emoji-container{
+  position: absolute;
+  width: 100%;
+  height: 50%;
 }

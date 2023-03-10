@@ -19,12 +19,11 @@ const Register = () => {
         e.preventDefault()
         const firstName = e.target[0].value
         const lastName = e.target[1].value
-        const displayName = e.target[2].value
-        const email = e.target[3].value
-        const countryCode = e.target[4].value
-        const phone = e.target[5].value
-        const password = e.target[6].value
-        const password2 = e.target[7].value
+        const email = e.target[2].value
+        const countryCode = e.target[3].value
+        const phone = e.target[4].value
+        const password = e.target[5].value
+        const password2 = e.target[6].value
         let photoURL = defaultImage
         if (password != password2) {
             alert("passwords don't match")
@@ -35,7 +34,6 @@ const Register = () => {
             uid: res.user.uid,
             firstName,
             lastName,
-            displayName,
             email,
             countryCode,
             phone,
@@ -64,8 +62,6 @@ const Register = () => {
         <input type="text" name="firstname"  required id="firstname"/>
         <label for="lastname">Last Name</label>
         <input type="text" name="lastname" required id="lastname"/>
-        <label for="firstname">Username</label>
-        <input type="text" name="username" required id="username"/>
         <label for="email">Your Email</label>
         <input type="email" name="email" required id="email"/>
         <div className="phone">

@@ -3,7 +3,8 @@ import logobg from "../images/logobg.png"
 import { useState } from "react"
 import { auth } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 
 
@@ -11,6 +12,7 @@ const Login = () => {
 
 
     const navigate = useNavigate()
+    signOut(auth)
 
     const [err, setErr] = useState(false)
     const handleSubmit = async (e) => {
@@ -33,6 +35,7 @@ const Login = () => {
         <div>
             <section className="register">
                 <div className="logo"><img src={logobg} alt="" /></div>
+                <h2 style={{color:"midnightblue"}}>User Login</h2>
                 <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit} className="form2">
                     <label for="email">Your Email</label>
@@ -40,7 +43,7 @@ const Login = () => {
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password"/>
                     {err && <span style={{color:"red"}}>Incorrect email or password</span>}
-                    <div className="reset"><a href="./resetpassword">Reset Password</a></div>
+                    <div className="reset"><Link to="/resetpassword">Reset Password</Link></div>
                     <button className="button" style={{color:"white"}}>Login</button>
                 </form>
                <Link className="logreg" to="/register">Register Your Account</Link>

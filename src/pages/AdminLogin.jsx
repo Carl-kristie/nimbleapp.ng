@@ -3,7 +3,7 @@ import logobg from "../images/logobg.png"
 import { useState } from "react"
 import { auth } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword,signOut } from "firebase/auth";
 
 
 
@@ -11,6 +11,7 @@ const Login = () => {
 
 
     const navigate = useNavigate()
+    signOut(auth)
 
     const [err, setErr] = useState(false)
     const handleSubmit = async (e) => {
@@ -33,6 +34,7 @@ const Login = () => {
         <div>
             <section className="register">
                 <div className="logo"><img src={logobg} alt="" /></div>
+                <h2 style={{color:"midnightblue"}}>Admin Login</h2>
                 <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit} className="form2">
                     <label for="email">Your Email</label>

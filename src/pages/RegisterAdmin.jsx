@@ -56,7 +56,6 @@ const Register = () => {
         <div className="phone">
             <label for="phonenumber">Phone</label>
             <select name="prefix" id="prefix">
-                <option value="af">AF +93</option>
                 <option value="ng">NG +234</option>
             </select>
             <input type="number" name="" id=""/>
