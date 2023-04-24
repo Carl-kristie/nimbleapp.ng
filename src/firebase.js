@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import firebase from 'firebase/compat/app';
+import firebase from 'firebase/app';
 import {getAuth} from "firebase/auth"
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
@@ -19,19 +19,34 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log("hello world")
-firebase.initializeApp(firebaseConfig);
  export const auth = getAuth()
 export const db = getFirestore()
 export const storage = getStorage()
-const messaging = getMessaging();
 
-export const requestForToken = async () => {
-  return getToken(messaging, { vapidKey: "BKaZ9wRCilbQ8u341LEn7gey53bpT15LI3SpaDhDKuYL8Z1YZhG14SPzP_jTSG89hQbi8IUoTWk0R3sgO1S7Yao" })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const messaging = getMessaging();
+export const requestForToken = () =>{
+  return getToken(messaging, { vapidKey: "BKaZ9wRCilbQ8u341LEn7gey53bpT15LI3SpaDhDKuYL8Z1YZhG14SPzP_jTSG89hQbi8IUoTWk0R3sgO1S7Yao"})
     .then((currentToken) => {
       if (currentToken) {
         console.log('current token for client: ', currentToken);
-        // Perform any other neccessary action with the token
+        // Perform any other necessary action with the token
       } else {
         // Show permission request UI
         console.log('No registration token available. Request permission to generate one.');

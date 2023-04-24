@@ -1,16 +1,12 @@
 import React, { useRef } from 'react'
 import { useState, createContext, useContext } from "react";
 import defaultImage from "../images/user.png"
-// import { createPicker} from 'picmo'
-// import { createPopup } from '@picmo/popup-picker';
 import { signOut, updateProfile } from 'firebase/auth';
-import checkPageStatus from "../utils/functions"
-import { default as firebase } from 'firebase/app';
 import { auth } from '../firebase'
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/chatContext';
-import { io } from 'socket.io-client';
+
 import toast, { Toaster } from 'react-hot-toast';
 import { requestForToken, onMessageListener } from '../firebase';
 import { db, storage} from "../firebase";
@@ -44,15 +40,9 @@ const AdminRight = () => {
     const [file2, setFile2] = useState(null);
     const [notification, setNotification] = useState({title: '', body: ''});
     const [previewURL, setPreviewURL] = useState(null);
-    const [groupExists, setGroupExists] = useState(false);
 
-  
-requestForToken()
-
-useEffect(() => {
-  const socket = io("https://4000-carlkristie-chatapp-jj95vqv1xiz.ws-eu89b.gitpod.io/")
-}, [])
-
+    
+// requestForToken()
 
   const handleSendImg = async() =>{
     if (img) {
@@ -144,6 +134,25 @@ if (data) {
           },
           [data.chatId + ".date"]: serverTimestamp(),
         });
+        const sendNotification = async (recipientToken, text) => {
+          try {
+            const payload = {
+              notification: {
+                title: `You have a new Message`,
+                body: text,
+                icon: "/firebase-logo.png",
+              },
+              data: {
+                click_action: "Open Message",
+                message: text,
+              },
+            };
+            // await messaging().sendToDevice(recipientToken, payload);
+            console.log("Notification sent successfully.");
+          } catch (error) {
+            console.error("Error sending notification:", error);
+          }
+        };
     }
         
     useEffect(() => {
@@ -278,7 +287,7 @@ useEffect(() => {
             <div className='back-btn' id='backbtn' onClick={goBack}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#8a8f8a" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><line x1="216" y1="128" x2="40" y2="128" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><polyline points="112 56 40 128 112 200" fill="none" stroke="#8a8f8a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg></div>
             <div className='chat-details'>
             <div className="avatar message-avatar" id='avatar'><img src={data.user.uid && users[users.findIndex(user => user.uid === data.user.uid)].photoURL} alt="" /></div>
-            <div className="message-chat-name">{data.user.uid && users[users.findIndex(user => user.uid === data.user.uid)].firstName + " "  +users[users.findIndex(user => user.uid === data.user.uid)].lastName}</div>
+            <div className="message-chat-name">{data.user.uid && users[users.findIndex(user => user.uid === data.user.uid)].displayName}</div>
             </div>
             <div className="message-options" onClick={openContact}><div onClick={showProfile} className="contact-info" id='contactInfo'><span on>Contact info</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#0d0d0d" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="#0d0d0d" stroke-miterlimit="10" stroke-width="16"></circle><path d="M31,216a112,112,0,0,1,194,0" fill="none" stroke="#0d0d0d" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div><svg width="18" height="4" viewBox="0 0 18 4" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2C4 1.60444 3.8827 1.21776 3.66294 0.888858C3.44318 0.55996 3.13082 0.303614 2.76537 0.152239C2.39992 0.000863686 1.99778 -0.0387431 1.60982 0.0384275C1.22186 0.115598 0.865492 0.30608 0.585787 0.585785C0.306082 0.86549 0.115601 1.22186 0.0384302 1.60982C-0.0387402 1.99778 0.000866492 2.39991 0.152242 2.76537C0.303617 3.13082 0.559962 3.44318 0.88886 3.66294C1.21776 3.8827 1.60444 4 2 4C2.53043 4 3.03914 3.78928 3.41421 3.41421C3.78929 3.03914 4 2.53043 4 2ZM14 2C14 2.39556 14.1173 2.78224 14.3371 3.11114C14.5568 3.44004 14.8692 3.69638 15.2346 3.84776C15.6001 3.99913 16.0022 4.03874 16.3902 3.96157C16.7781 3.8844 17.1345 3.69392 17.4142 3.41421C17.6939 3.13451 17.8844 2.77814 17.9616 2.39018C18.0387 2.00222 17.9991 1.60008 17.8478 1.23463C17.6964 0.869179 17.44 0.556821 17.1111 0.337059C16.7822 0.117296 16.3956 -2.14718e-06 16 -2.12989e-06C15.4696 -2.10671e-06 14.9609 0.210712 14.5858 0.585785C14.2107 0.960857 14 1.46956 14 2ZM7 2C7 2.39556 7.1173 2.78224 7.33706 3.11114C7.55682 3.44004 7.86918 3.69638 8.23463 3.84776C8.60009 3.99913 9.00222 4.03874 9.39018 3.96157C9.77814 3.8844 10.1345 3.69392 10.4142 3.41421C10.6939 3.13451 10.8844 2.77814 10.9616 2.39018C11.0387 2.00222 10.9991 1.60008 10.8478 1.23463C10.6964 0.869179 10.44 0.556822 10.1111 0.337059C9.78224 0.117296 9.39556 -1.8412e-06 9 -1.82391e-06C8.46957 -1.80073e-06 7.96086 0.210712 7.58579 0.585785C7.21071 0.960858 7 1.46957 7 2Z" fill="#51545C"></path></svg></div>
         </div>
@@ -310,10 +319,13 @@ useEffect(() => {
         </div>
         {userInfo && <div className="profile-details">
             <h3>Customer's Details</h3>
-            <div className="profile-photo"><img src={users[users.findIndex(user => user.uid === data.user.uid)].photoURL} alt="" /></div>
-            <div className="displayName">{users[users.findIndex(user => user.uid === data.user.uid)].firstName + " "  +users[users.findIndex(user => user.uid === data.user.uid)].lastName}</div>
-            <div className="phone-num">{users[users.findIndex(user => user.uid === data.user.uid)].phone}</div>
-            <div className="email">{users[users.findIndex(user => user.uid === data.user.uid)].email}</div>
+            <div className="profile-photo"><img src={fileURL? fileURL: currentUser.photoURL} alt="" /></div>
+            <button type='button' className='changepicbtn' >Change Profile Picture <input type="file"onChange={changePic}/></button>
+            {loading && <p>Uploading...</p>}
+            <div className="displayName">{userInfo.displayName}</div>
+            <div className="phone-num">{userInfo.phone}</div>
+            <div className="email">{userInfo.email}</div>
+            <div className="logout-btn" onClick={()=>signOut(auth)}>Logout</div>
             <div className="x" onClick={closeProfile}>x</div>
             </div>}
 

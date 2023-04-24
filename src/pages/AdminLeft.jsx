@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useCallback } from 'react'
-
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 import logobg from "../images/logobg.jpg"
@@ -217,7 +216,7 @@ const fetchCurrentAdmin = async (e) => {
   const admin = collection(db, "users")
   const q = query(
     admin,
-    where("displayName", "==", e.target.innerHTML)
+    where("firstName", "==", e.target.innerHTML)
   );
 
   try {
@@ -248,7 +247,7 @@ const selectFunction = async () => {
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentAdmin.uid,
-            displayName: currentAdmin.displayName,
+            displayName: currentAdmin.firstName,
             photoURL: currentAdmin.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
@@ -314,11 +313,12 @@ useEffect(() => {
   var data = doc.data();
   setUsers(arr => [...arr , data]);
 });
-    
   };
 
   currentUser.uid && getUsers();
 }, [currentUser.uid]);
+
+users? console.log(users): console.log("Loading users")
 
 
 function openAdmins() {
@@ -401,9 +401,9 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
     {users?<div className="messages messagesone">
     {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
           <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1].userInfo)}>
-            <div className="first-col"><img src={users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div>
+            {/* <div className="first-col"><img src={users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div> */}
             <div className="second-col">
-            <div className="first-row">{users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].firstName + " " + users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].lastName}</div>
+            <div className="first-row">{users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].firstName}</div>
                 <div className="second-row">{}</div>
             </div>
             <div className="third-col"></div>

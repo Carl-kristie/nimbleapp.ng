@@ -1,7 +1,5 @@
 import React from 'react'
 import { useState, createContext, useContext, useRef } from "react";
-import { createPicker} from 'picmo'
-import { createPopup } from '@picmo/popup-picker';
 import { signOut, updateProfile } from 'firebase/auth';
 import { getMessaging, getToken } from "firebase/messaging";
 import {
@@ -192,7 +190,7 @@ const fetchAdmins = async () => {
 function pic(e) {
   if (file) {
     console.log(file)
-    const storageRef = ref(storage, userInfo.displayName);
+    const storageRef = ref(storage, userInfo.firstName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",

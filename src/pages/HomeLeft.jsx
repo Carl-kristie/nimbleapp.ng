@@ -12,7 +12,7 @@ import { signOut, updateProfile, updatePassword, reauthenticateWithCredential, E
 // English.
 import en from 'javascript-time-ago/locale/en'
 
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
 import { useContext } from 'react';
 import {
   collection,
@@ -189,7 +189,7 @@ const selectFunction = async () => {
         await updateDoc(doc(db, "userChats", currentAdmin.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
-            displayName: currentUser.displayName,
+            displayName: currentUser.firstName,
             photoURL: currentUser.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
@@ -288,7 +288,8 @@ function openAlert() {
 function pic(e) {
   if (file) {
     console.log(file)
-    const storageRef = ref(storage, userInfo.displayName);
+    const storage = getStorage();
+    const storageRef = ref(storage, userInfo.firstName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
