@@ -35,7 +35,6 @@ const Login = () => {
         <div>
             <section className="register">
                 <div className="logo"><img src={logobg} alt="" /></div>
-                <h2 style={{color:"midnightblue"}}>User Login</h2>
                 <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit} className="form2">
                     <label for="email">Your Email</label>

@@ -37,6 +37,7 @@ const AdminLeft = () => {
     const [chats, setChats] = useState([])
     const activeAdmins = []
     const [fileURL, setFileURL] = useState()
+    const [adminInfo, setAdminInfo] = useState(null)
     const [loading, setLoading] = useState()
     const [percent, setPercent] = useState()
 const [file, setFile] = useState()
@@ -55,7 +56,7 @@ useEffect(() => {
 function pic(e) {
   if (file) {
     console.log(file)
-    const storageRef = ref(storage, userInfo.displayName);
+    const storageRef = ref(storage, adminInfo.displayName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
@@ -94,6 +95,34 @@ function pic(e) {
   }
 }
 
+
+function fetchUserData() {
+  function checkifavailiable() {
+    getDoc(doc(db, "admins", currentUser.uid)).then(docSnap => {
+      if (docSnap.exists()) {
+        setAdminInfo(docSnap.data(), ()=>{
+        });
+        console.log(docSnap.data(), adminInfo)
+      } else {
+        console.log("No such document!");
+      }
+    })
+  }
+  currentUser.uid && checkifavailiable()
+}
+ 
+
+adminInfo && console.log(adminInfo, user)
+user && console.log(adminInfo, user)
+
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');}
+    })
+}
+  requestPermission()
 
 
     const handleSearch = async () => {
@@ -194,21 +223,6 @@ const handleKey = (e) => {
   e.code === "Enter" && handleSearch();
 }
 
-const [userInfo, setUserInfo] = useState(null)
-function fetchUserData() {
-  function checkifavailiable() {
-    getDoc(doc(db, "admins", currentUser.uid)).then(docSnap => {
-      if (docSnap.exists()) {
-        setUserInfo(docSnap.data());
-      } else {
-        console.log("No such document!");
-      }
-    })
-  }
-  currentUser.uid && checkifavailiable()
-}
-
-
 
 
 const fetchCurrentAdmin = async (e) => {
@@ -216,7 +230,7 @@ const fetchCurrentAdmin = async (e) => {
   const admin = collection(db, "users")
   const q = query(
     admin,
-    where("firstName", "==", e.target.innerHTML)
+    where("displayName", "==", e.target.innerHTML)
   );
 
   try {
@@ -245,16 +259,16 @@ const selectFunction = async () => {
 
         //create user chats
         await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId + ".userInfo"]: {
+          [combinedId + ".adminInfo"]: {
             uid: currentAdmin.uid,
-            displayName: currentAdmin.firstName,
+            displayName: currentAdmin.displayName,
             photoURL: currentAdmin.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
 
         await updateDoc(doc(db, "userChats", currentAdmin.uid), {
-          [combinedId + ".userInfo"]: {
+          [combinedId + ".adminInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
@@ -312,13 +326,13 @@ useEffect(() => {
   // doc.data() is never undefined for query doc snapshots
   var data = doc.data();
   setUsers(arr => [...arr , data]);
+  users:console.log(users)
 });
+    
   };
 
   currentUser.uid && getUsers();
 }, [currentUser.uid]);
-
-users? console.log(users): console.log("Loading users")
 
 
 function openAdmins() {
@@ -345,7 +359,7 @@ useEffect(() => {
 
 const handleProfileSubmit = async (e) => {
   e.preventDefault()
-  console.log(userInfo)
+  console.log(adminInfo)
   let displayName = e.target[1].value
   await updateDoc(doc(db, "admins", currentUser.uid),{
     displayName,
@@ -390,7 +404,7 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
 
 <div className="header">
     <div className="logo"><img src={logobg} alt="" /></div>
-    <div className="setting" onClick={userInfo && openSettings}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#b6b4b4" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="48" fill="none" stroke="#b6b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle><path d="M197.4,80.7a73.6,73.6,0,0,1,6.3,10.9L229.6,106a102,102,0,0,1,.1,44l-26,14.4a73.6,73.6,0,0,1-6.3,10.9l.5,29.7a104,104,0,0,1-38.1,22.1l-25.5-15.3a88.3,88.3,0,0,1-12.6,0L96.3,227a102.6,102.6,0,0,1-38.2-22l.5-29.6a80.1,80.1,0,0,1-6.3-11L26.4,150a102,102,0,0,1-.1-44l26-14.4a73.6,73.6,0,0,1,6.3-10.9L58.1,51A104,104,0,0,1,96.2,28.9l25.5,15.3a88.3,88.3,0,0,1,12.6,0L159.7,29a102.6,102.6,0,0,1,38.2,22Z" fill="none" stroke="#b6b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div>
+    <div className="setting" onClick={adminInfo && openSettings}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#b6b4b4" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="48" fill="none" stroke="#b6b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle><path d="M197.4,80.7a73.6,73.6,0,0,1,6.3,10.9L229.6,106a102,102,0,0,1,.1,44l-26,14.4a73.6,73.6,0,0,1-6.3,10.9l.5,29.7a104,104,0,0,1-38.1,22.1l-25.5-15.3a88.3,88.3,0,0,1-12.6,0L96.3,227a102.6,102.6,0,0,1-38.2-22l.5-29.6a80.1,80.1,0,0,1-6.3-11L26.4,150a102,102,0,0,1-.1-44l26-14.4a73.6,73.6,0,0,1,6.3-10.9L58.1,51A104,104,0,0,1,96.2,28.9l25.5,15.3a88.3,88.3,0,0,1,12.6,0L159.7,29a102.6,102.6,0,0,1,38.2,22Z" fill="none" stroke="#b6b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg></div>
 </div>
 
 <div className="search-messages">
@@ -398,18 +412,18 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
 </div>
 
 
-    {users?<div className="messages messagesone">
-    {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
+{adminInfo && <div className="messages messagesone">
+    {chats && Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
           <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1].userInfo)}>
-            {/* <div className="first-col"><img src={users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div> */}
+            <div className="first-col"><img src={users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div>
             <div className="second-col">
-            <div className="first-row">{users[users.findIndex(user => user.uid == chat[1].userInfo.uid)].firstName}</div>
-                <div className="second-row">{}</div>
+            <div className="first-row">{users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].firstName +" " + users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastName}</div>
+                <div className="second-row">{users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastMessage}</div>
             </div>
             <div className="third-col"></div>
         </div>
         ))}
-    </div>:<div>Loading</div>}
+    </div>}
 
 
     
@@ -427,15 +441,15 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
 
 
     <div className="profile-container setting-container" id='settingContainer'>
-            {userInfo? <div className="settings " id='mainSetting'>
+            {adminInfo? <div className="settings " id='mainSetting'>
                 <div className="h3">Settings</div>
                 <div className="xx" onClick={closeProfile}>x</div>
                 <div className="title">PROFILE</div>
                 <div className="profile-settings setting-item" onClick={openProfileSetting}>
                     <img className='profile-photo photo-setting' src={fileURL? fileURL: currentUser.photoURL} alt="" />
                     <div className="profile-others">
-                        <div className="profile-name">{userInfo.displayName}</div>
-                        <div className="profile-email">{userInfo.email}</div>
+                        <div className="profile-name">{adminInfo.displayName}</div>
+                        <div className="profile-email">{adminInfo.email}</div>
                     </div>
                     <div className="caret"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="#b0abab" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="96 48 176 128 96 208" fill="none" stroke="#b0abab" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg></div>
                 </div>
@@ -468,7 +482,7 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
                 {loading && <p>Uploading...</p>}
             </div>
             <label htmlFor="firstname">DisplayName</label> 
-            <input type="text" name="firstname" defaultValue={userInfo && userInfo.displayName} required id="firstname" /> 
+            <input type="text" name="firstname" defaultValue={adminInfo && adminInfo.displayName} required id="firstname" /> 
             <button className="button" style={{color:"white"}}>Save Changes</button>
           </form>
         </div>

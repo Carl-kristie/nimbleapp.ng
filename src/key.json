@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "nimble-chat-app",
+  "private_key_id": "914daec8ff4581c9b1b6a971163caab93bad8d89",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCq7GX5djAhkEaX\nqD5GY4dMKkLIHZkWyNQWpjQFXn+JGcY5M72hms8fa1FMU7k3EfRvhFwfKPzJsSjz\nl2VSgqLdJeiMQTvlOeHTzAG/d62osUk3AiI170erljimVuUQXZSrYyz+y5EYeDfZ\ns/9qdOsDw4FPN+rnhnrXlZAK5UQRPL8eU8iV65Ahl0jmv240dcUhiiQNS7CpuWa6\nBmBTPGvu8tDFUYuPOeq48WpQD2rs1UrzPrNOyqZTNRHyi8fQRXVs/RlvhEngmpXe\nGZTLhq6EVuxwQHSNDetvfnlxtE+ahFeRNdyuemL4Pvt2Nh0nunQ6l+xUIWEmhQgR\nyA+HJBNFAgMBAAECggEAIN2CwCRnHdUJldiuXMd/ePg5ThRO3vAvw8kigJPKjxir\nIk2eHWhQgjiW8ce5eerUZur68azmanvLpYcLXwGqgj5rSCi09R8bmqeEAIZpGGI6\ncz7QSDGhxM8GRom30t1DnG7d9II8/IkFKDGxn40qsVcS0qIsY2da0IA8KbQq0etd\nVH+e3sZPx26qcS1mwjD4NtmlOXQ3rDBC2NqXtM/682gNGKfpaAV97Ilv3piXTtIp\nW09UX9A31uWKm201jgsNIU36MnstutZai0rmv9F4FUxfZXg3WwhEe0/jz2Mt4Fi4\nh62YNabv2ZujTWVZyBj0LAe8P4SR6YQCJIDwbxN2sQKBgQDXLcuOLw/jSxrpxGIP\n6cE92ywEzeMRAdLRt7kf0Llld+6DZMmuIbVPsJmcjKYpe5Spj/GAR5HnW+O5N8Ox\n7tIkcVJrRl5rY2UpR6OI0FGrpTf4NVSBwbMJp1udVJjo8q3DhSnkPHc0AmDjh4im\nE/rV78lo3VXnNyWUMnuZThMZGQKBgQDLWVQKnN9CeTXe7d+zZlltcq14mfQ53od5\n+jzoRfq3VHiV4y01M0beifStrM+8n9sVAvQlBKEut4AfNU4qRZdfPKw0M0HWsBNr\nUKjk/gQqa2WtSHgyZUzF222Lq7A5QD/0dtxYGpgFhE6EzMn73hJGVqws6rS8K6Yy\nULx4VdrVDQKBgB8Zf1INez5enIUs3P9vyX4nLzWCjE7o9I9a/maaxDDmJJLY/k0s\nkgfyfkEiEuHr+pCHPWBM98l4fnFGngIZgkXCGydmBD+BHh3ZPMmJUkR8nJpDGvOm\nCzpZ9ePHVlJUwMiBdoyGMLRTo60+6YEXYimJfpKpasEAN24z3alKn3gBAoGBAIUh\n38bu+7COoPlqLYpL2QKyEOajjOUSTwpKDfRYVJQQhr5DNMbe4mgyU/Ic8Qjic9Hm\n1CckR87JLuW/xYQhecBNfcTTRiijsKMS9PCvadTH6ZKwnpkH/2KOjcLizgY9jWGl\nLA+2oY8DF1EUrqzqsHZCqojhxSBpR28rsqjqNNJFAoGBAK6VSMA+jvTF4MAfS8xO\nTdMK2vmxvBI/Ua766RpFaLd7uKprN2UhwtFXJ/S02UKj1tZWq+d2mC8ECccNj+mS\nP5mEhxd3lZH6cIJ+4+Wz1CHQafdTmMn2PWlmPs3oJSXlrhfJ642/VMC/qmAfiiWn\nKrVU/7tHrwNb0WTQAvm8245X\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-zma52@nimble-chat-app.iam.gserviceaccount.com",
+  "client_id": "103382262401322159984",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-zma52%40nimble-chat-app.iam.gserviceaccount.com"
+}

@@ -97,9 +97,7 @@ body{
   font-family: hanken grotesk;
   color: rgba(0, 0, 0, 0.8);
   margin: 0%;
-  margin-bottom: 3%;
   height: fit-content;
-  margin-bottom: 2.5%;
 }
 
 .register>form{
@@ -433,7 +431,7 @@ flex-direction: column-reverse;
 
 .message-items>*{
   max-width: max-content;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(1, 26, 255, 0.09);
   padding: 1%;
   margin: 1.5%;
   border-radius: 5px;
@@ -442,11 +440,12 @@ flex-direction: column-reverse;
   font-size: 15px;
   font-family: hanken grotesk;
 }
-
+ 
 .owner{
     display: grid;
     justify-self: right;
-    background-color: rgba(1, 26, 255, 0.09);
+    background-color: royalblue;
+    color: white;
   }
 
   /* Message items */
@@ -871,6 +870,15 @@ flex-direction: column-reverse;
     .settings{
       width: 23em;
       height: 25em;
+    }
+    .message-items>.owner>span{
+      font-size: 20px;
+      padding: 5px 3px 5px 3px;
+    }
+    .message-items>.other>span{
+      font-size: 20px;
+      padding: 5px 3px 5px 3px; 
+
     }
 
 }

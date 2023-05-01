@@ -190,7 +190,7 @@ const fetchAdmins = async () => {
 function pic(e) {
   if (file) {
     console.log(file)
-    const storageRef = ref(storage, userInfo.firstName);
+    const storageRef = ref(storage, userInfo.displayName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
@@ -228,6 +228,26 @@ function pic(e) {
     );
   }
 }
+
+const messaging = getMessaging();
+getToken(messaging, { vapidKey: 'BKaZ9wRCilbQ8u341LEn7gey53bpT15LI3SpaDhDKuYL8Z1YZhG14SPzP_jTSG89hQbi8IUoTWk0R3sgO1S7Yao' }).then((currentToken) => {
+  if (currentToken) {
+    // Send the token to your server and update the UI if necessary
+    console.log(currentToken)
+            updateDoc(doc(db, "users", currentUser.uid),{
+            currentToken,
+       })
+    // ...
+  } else {
+    // Show permission request UI
+    console.log('No registration token available. Request permission to generate one.');
+    // ...
+  }
+}).catch((err) => {
+  console.log('An error occurred while retrieving token. ', err);
+  // ...
+});
+  
 
 useEffect(() => {
   pic()

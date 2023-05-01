@@ -68,7 +68,7 @@ const HomeLeft = () => {
         collection(db, "admins")
       );
       
-  
+   
       try {
           
         const querySnapshot = await getDocs(q);
@@ -114,6 +114,16 @@ const [userInfo, setUserInfo] = useState(null)
 
 // }
 
+
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');}
+    })
+}
+  requestPermission()
+
 function fetchUserData() {
   function checkifavailiable() {
     getDoc(doc(db, "users", currentUser.uid)).then(docSnap => {
@@ -126,7 +136,7 @@ function fetchUserData() {
   }
   currentUser.uid && checkifavailiable()
 }
-
+ 
 
 const [loading, setLoading] = useState()
 const [file, setFile] = useState()
@@ -189,7 +199,7 @@ const selectFunction = async () => {
         await updateDoc(doc(db, "userChats", currentAdmin.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
-            displayName: currentUser.firstName,
+            displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
@@ -237,6 +247,8 @@ function openAdmins() {
   document.getElementById("users").classList.toggle("translatefull")
 }
 
+admins? console.log(admins): console.log("loading")
+
 const openChat = (u) => {
   dispatch({ type: "CHANGE_USER", payload: u });
   document.getElementById("headerRight").style.display = "grid"
@@ -254,6 +266,7 @@ const openChat = (u) => {
 function openSettings() {
   document.getElementById("settingContainer").style.display = "grid"
   document.getElementById("mainSetting").style.display = "grid"
+  console.log("opened ")
 
 }
 
@@ -289,7 +302,7 @@ function pic(e) {
   if (file) {
     console.log(file)
     const storage = getStorage();
-    const storageRef = ref(storage, userInfo.firstName);
+    const storageRef = ref(storage, "profilePictures/" + userInfo.displayName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
@@ -429,7 +442,7 @@ var d = new Date(0)
     
 <div className="messages users translatezero" id='users'>
       {admins?
-      admins.slice(0,3).map((element) => {
+      admins.slice(0,5).map((element) => {
         return <div className="message-item user-item" onClick={handleSelect} key={element.uid}>
       <img src={element.photoURL} alt="" className="profile-photo user-photo" />
       <div className="display-name">{element.displayName}</div>

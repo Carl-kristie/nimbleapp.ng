@@ -12,19 +12,17 @@ const firebaseConfig = {
   storageBucket: "nimble-chat-app.appspot.com",
   messagingSenderId: "349995845939",
   appId: "1:349995845939:web:0293d1d4c256a6056cd646",
-  measurementId: "G-T63D2PZ5Z6"
+  measurementId: "G-T63D2PZ5Z6",
 };
 
 
 
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
  export const auth = getAuth()
 export const db = getFirestore()
 export const storage = getStorage()
-
-
-
 
 
 
