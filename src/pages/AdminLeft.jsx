@@ -216,9 +216,6 @@ function openAlert() {
 }
 
 
-
-
-
 const handleKey = (e) => {
   e.code === "Enter" && handleSearch();
 }
@@ -415,10 +412,10 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
 {adminInfo && <div className="messages messagesone">
     {chats && Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
           <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1].userInfo)}>
-            <div className="first-col"><img src={users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div>
+            <div className="first-col"><img src={users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].photoURL} alt="" /></div>
             <div className="second-col">
-            <div className="first-row">{users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].firstName +" " + users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastName}</div>
-                <div className="second-row">{users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastMessage}</div>
+            <div className="first-row">{users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].firstName +" " + users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastName}</div>
+                <div className="second-row">{users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].lastMessage}</div>
             </div>
             <div className="third-col"></div>
         </div>

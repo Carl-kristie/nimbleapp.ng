@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState, createContext, useContext, useRef } from "react";
 import { signOut, updateProfile } from 'firebase/auth';
+
+import OneSignalReact from 'react-onesignal';
 import { getMessaging, getToken } from "firebase/messaging";
 import {
   collection,
@@ -99,6 +101,8 @@ const HomeRight = () => {
 
   }
 
+  
+
 
     const handleSend = async() =>  {
         if (text === "") {
@@ -183,7 +187,11 @@ const fetchAdmins = async () => {
 
 
 
-
+OneSignalReact.getUserId().then(userId => {
+  updateDoc(doc(db, "users", currentUser.uid),{
+    userId,
+    })
+});
 
 
 

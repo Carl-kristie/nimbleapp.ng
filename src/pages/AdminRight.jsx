@@ -7,7 +7,6 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/chatContext';
 import key from "../key.json"
-import { getMessaging, getToken } from "firebase/messaging";
 import toast, { Toaster } from 'react-hot-toast';
 import { requestForToken, onMessageListener } from '../firebase';
 import { db, storage} from "../firebase";
@@ -22,6 +21,7 @@ import {
   setDoc,
   getDocs
 } from "firebase/firestore";
+import OneSignalReact from 'react-onesignal';
 
 
 const AdminRight = () => {
@@ -133,44 +133,6 @@ const [users, setUsers] = useState([])
           },
           [data.chatId + ".date"]: serverTimestamp(),
         });
-
-        
-          
-        function sendNotificaiton() {
-          var access_token;
-          var token = data.user.uid && users[users.findIndex(user => user.uid === data.user.uid)].currentToken
-          auth.currentUser.getIdToken()
-          .then((idToken) => {
-            console.log('Firebase ID token:', idToken);
-            console.log(token)
-          access_token = idToken
-        })
-          fetch('https://fcm.googleapis.com/v1/projects/nimble-chat-app/messages:send', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${access_token}`
-  },
-  body: JSON.stringify({
-    message: {
-      notification: {
-        title: 'My notification title',
-        body: 'My notification body'
-      },
-      token: token
-    }
-  })
-})
-.then(response => {
-  console.log('Message sent successfully:', response);
-})
-.catch(error => {
-  console.error('Error sending message:', error);
-});
-
-
-        }
-        sendNotificaiton()
     }
     useEffect(() => {
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -209,25 +171,13 @@ async function changePic(e) {
   
 }
 
-const messaging = getMessaging();
-getToken(messaging, { vapidKey: 'BKaZ9wRCilbQ8u341LEn7gey53bpT15LI3SpaDhDKuYL8Z1YZhG14SPzP_jTSG89hQbi8IUoTWk0R3sgO1S7Yao' }).then((currentToken) => {
-  if (currentToken) {
-    // Send the token to your server and update the UI if necessary
-    console.log(currentToken)
-            updateDoc(doc(db, "admins", currentUser.uid),{
-            currentToken,
-       })
-    // ...
-  } else {
-    // Show permission request UI
-    console.log('No registration token available. Request permission to generate one.');
-    // ...
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  // ...
+
+OneSignalReact.getUserId().then(userId => {
+  updateDoc(doc(db, "admins", currentUser.uid),{
+    userId,
+    })
 });
-  
+
 
 function pic(e) {
   if (file) {

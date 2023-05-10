@@ -105,7 +105,7 @@ body{
   height: 43em;
   margin: auto;
   display: grid;
-  row-gap: 15px;
+  row-gap: 0px;
 }
 
 .register>.form2{
@@ -149,7 +149,7 @@ select{
 }
 
 form>input{
-  height: 3em;
+  height: 2em;
   border: 1.5px solid rgba(16, 1, 56, 0.3);
   transition: .6s all ease;
   border-radius: 5px;
@@ -853,7 +853,7 @@ flex-direction: column-reverse;
     }
     .register{
       margin: auto;
-      margin-top: 10%;
+      margin-top: 5%;
     }
 
     .chat-details{
