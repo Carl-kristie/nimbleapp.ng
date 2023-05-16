@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useCallback } from 'react'
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
+import OneSignal from 'react-onesignal';
 import logobg from "../images/logobg.jpg"
 import { useEffect } from 'react';
 import { ChatContext } from '../context/chatContext';
@@ -114,16 +115,6 @@ const [userInfo, setUserInfo] = useState(null)
 
 // }
 
-
-function requestPermission() {
-  console.log('Requesting permission...');
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');}
-    })
-}
-  requestPermission()
-
 function fetchUserData() {
   function checkifavailiable() {
     getDoc(doc(db, "users", currentUser.uid)).then(docSnap => {
@@ -204,7 +195,26 @@ const selectFunction = async () => {
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
-       
+        const seenDoc = await getDoc(doc(db, "seen", currentUser.uid));
+        const seenDoc2 = await getDoc(doc(db, "seen", currentUser.uid));
+        if (seenDoc.exists()) {
+          updateDoc(doc(db, "seen", currentUser.uid), {
+            [currentAdmin.uid]: "true"
+          });
+        } else {
+          setDoc(doc(db, "seen", currentUser.uid), {
+            [currentAdmin.uid]: "true"
+          });
+        } 
+        if (seenDoc2.exists()) {
+          updateDoc(doc(db, "seen", currentAdmin.uid), {
+            [currentUser.uid]: "true"
+          });
+        } else {
+          setDoc(doc(db, "seen", currentAdmin.uid), {
+            [currentUser.uid]: "true"
+          });
+        } 
       }
       document.getElementById("users").classList.remove("translatefull")
 
@@ -219,13 +229,22 @@ const handleSelect = async (e) => {
 
 }
 
+const [seenArray, setSeenArray] = useState() 
 
 useEffect(() => {
   const getChats = () => {
     const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
       setChats(doc.data());
-      
+      Object.entries(doc.data())
     });
+    getDoc(doc(db, "seen", currentUser.uid)).then(docSnap => {
+      if (docSnap.exists()) {
+        setSeenArray(docSnap.data(), ()=>{
+        });
+      } else {
+        console.log("No such document!");
+      }
+    })
 
     return () => {
       unsub();
@@ -234,7 +253,7 @@ useEffect(() => {
   };
 
   currentUser.uid && getChats();
-}, [currentUser.uid]);
+}, [currentUser.uid, seenArray]);
 
 
 function toDateTime(secs) {
@@ -247,12 +266,34 @@ function openAdmins() {
   document.getElementById("users").classList.toggle("translatefull")
 }
 
-admins? console.log(admins): console.log("loading")
 
-const openChat = (u) => {
-  dispatch({ type: "CHANGE_USER", payload: u });
+
+
+
+const openChat = async (u) => {
+
+  dispatch({ type: "CHANGE_USER", payload: u.userInfo });
+  const seenDoc = await getDoc(doc(db, "seen", currentUser.uid));
+  const seenDoc2 = await getDoc(doc(db, "seen", u.userInfo.uid)); 
+  if (seenDoc.exists()) {
+    updateDoc(doc(db, "seen", currentUser.uid), {
+      [u.userInfo.uid]: "true"
+    });
+  } else {
+    setDoc(doc(db, "seen", currentUser.uid), {
+      [u.userInfo.uid]: "true"
+    });
+  }
+  if (seenDoc2.exists()) {
+    updateDoc(doc(db, "seen", u.userInfo.uid), {
+      [currentUser.uid]: "true"
+    });
+  } else {
+    setDoc(doc(db, "seen", u.userInfo.uid), {
+      [currentUser.uid]: "true"
+    });
+  }
   document.getElementById("headerRight").style.display = "grid"
-  console.log(window.screen.availWidth)
   if (window.screen.availWidth < "900") {
 
   document.getElementById("homeleft").style.display = "none"
@@ -266,8 +307,6 @@ const openChat = (u) => {
 function openSettings() {
   document.getElementById("settingContainer").style.display = "grid"
   document.getElementById("mainSetting").style.display = "grid"
-  console.log("opened ")
-
 }
 
 function openProfileSetting() {
@@ -300,7 +339,6 @@ function openAlert() {
 
 function pic(e) {
   if (file) {
-    console.log(file)
     const storage = getStorage();
     const storageRef = ref(storage, "profilePictures/" + userInfo.displayName);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -323,8 +361,6 @@ function pic(e) {
             photoURL: url
           })
             .then(() => {
-              console.log("profile updated");
-              console.log(currentUser.photoURL);
               setFileURL(url); // Update the fileURL state with the URL
               setLoading(false);
               updateDoc(doc(db, "users", currentUser.uid), {
@@ -343,7 +379,6 @@ function pic(e) {
 
 const handleProfileSubmit = async (e) => {
   e.preventDefault()
-  console.log(userInfo)
   let firstName = e.target[1].value
   let lastName = e.target[2].value
   let phone = e.target[4].value
@@ -404,6 +439,35 @@ useEffect(() => {
 fetchUserData()
 }, [currentUser])
 
+const requestNotificationPermission = () => {
+  OneSignal.getUserId().then(userId => {
+    userId && updateDoc(doc(db, "users", currentUser.uid),{
+      userId,
+      })
+  });
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        // Permission granted, handle accordingly
+        // Initialize OneSignal
+        OneSignal.getUserId().then(userId => {
+          userId && updateDoc(doc(db, "users", currentUser.uid),{
+            userId,
+            })
+            
+
+        });
+      
+      }
+    });
+  }
+};
+
+
+useEffect(() => {
+  requestNotificationPermission()
+}, [currentUser])
+
 useEffect(() => {
   fetchAdmins()
 }, [])
@@ -427,13 +491,13 @@ var d = new Date(0)
 
     <div className="messages messagesone">
     {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
-          <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1].userInfo)}>
+          <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1])}>
             <div className="first-col"><img src={admins[admins.findIndex(admin => admin.uid == chat[1].userInfo.uid)].photoURL} alt="" /></div>
             <div className="second-col">
             <div className="first-row">{chat[1].userInfo.displayName}</div>
-                <div className="second-row">{chat[1].userInfo.lastMessage}</div>
+                <div className="second-row">  {chat[1].lastMessage && chat[1].lastMessage.text ? chat[1].lastMessage.text : ''}</div>
             </div>
-            <div className="third-col"></div>
+            <div className="third-col">{seenArray && seenArray[chat[1].userInfo.uid] && seenArray[chat[1].userInfo.uid] === "false"?<span className='newmessageball'></span>:<span></span>}</div>
         </div>
         ))}
     </div>
@@ -442,7 +506,7 @@ var d = new Date(0)
     
 <div className="messages users translatezero" id='users'>
       {admins?
-      admins.slice(0,5).map((element) => {
+      admins.slice(0,3).map((element) => {
         return <div className="message-item user-item" onClick={handleSelect} key={element.uid}>
       <img src={element.photoURL} alt="" className="profile-photo user-photo" />
       <div className="display-name">{element.displayName}</div>

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, createContext, useContext, useRef } from "react";
 import { signOut, updateProfile } from 'firebase/auth';
 
-import OneSignalReact from 'react-onesignal';
+import OneSignal from 'react-onesignal';
 import { getMessaging, getToken } from "firebase/messaging";
 import {
   collection,
@@ -97,7 +97,45 @@ const HomeRight = () => {
       );
       
     } 
+    const docRef = doc(db, "admins", data.user.uid);
+    const docSnap = await getDoc(docRef);
 
+    if (docSnap.exists()) {
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+    const userId = docSnap.data().userId
+
+    const sendNotificationToPlayer = () => {
+      const apiKey = 'NjdjZjhjNjQtYjFmMy00NzE2LTg4MzAtYjAxMmJhMDk3Yjhl';
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${apiKey}`,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          app_id: "e9a0dd62-7875-4412-bd6e-1669e538a979",
+          include_player_ids: [userId], // Replace with the desired player ID(s)
+          contents: {
+            en: "New Message: File",
+          },
+          name: 'INTERNAL_CAMPAIGN_NAME',
+        }),
+      };
+    
+      fetch('https://onesignal.com/api/v1/notifications', requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Notification sent:', data);
+        })
+        .catch(error => {
+          console.error('Error sending notification:', error);
+        });
+    };
+   userId && sendNotificationToPlayer()
 
   }
 
@@ -128,8 +166,59 @@ const HomeRight = () => {
           [data.chatId + ".lastMessage"]:{
             text,
           },
+          
           [data.chatId + ".date"]: serverTimestamp(),
         });
+        const seenDoc = await getDoc(doc(db, "seen", currentUser.uid));
+        const combinedId = currentUser.uid + data.user.uid
+        if (seenDoc.exists()) {
+          updateDoc(doc(db, "seen", data.user.uid), {
+            [currentUser.uid]: "false",
+          });
+        } else {
+          setDoc(doc(db, "seen", data.user.uid), {
+            [currentUser.uid]: "false",
+          });
+        }
+        const docRef = doc(db, "admins", data.user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+        const userId = docSnap.data().userId
+
+        const sendNotificationToPlayer = () => {
+          const apiKey = 'NjdjZjhjNjQtYjFmMy00NzE2LTg4MzAtYjAxMmJhMDk3Yjhl';
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${apiKey}`,
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+              app_id: "e9a0dd62-7875-4412-bd6e-1669e538a979",
+              include_player_ids: [userId], // Replace with the desired player ID(s)
+              contents: {
+                en: "New Message: " + text,
+              },
+              name: 'INTERNAL_CAMPAIGN_NAME',
+            }),
+          };
+        
+          fetch('https://onesignal.com/api/v1/notifications', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+              console.log('Notification sent:', data);
+            })
+            .catch(error => {
+              console.error('Error sending notification:', error);
+            });
+        };
+       userId && sendNotificationToPlayer()
     }
         
     useEffect(() => {
@@ -186,18 +275,8 @@ const fetchAdmins = async () => {
 }
 
 
-
-OneSignalReact.getUserId().then(userId => {
-  updateDoc(doc(db, "users", currentUser.uid),{
-    userId,
-    })
-});
-
-
-
 function pic(e) {
   if (file) {
-    console.log(file)
     const storageRef = ref(storage, userInfo.displayName);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
@@ -236,26 +315,6 @@ function pic(e) {
     );
   }
 }
-
-const messaging = getMessaging();
-getToken(messaging, { vapidKey: 'BKaZ9wRCilbQ8u341LEn7gey53bpT15LI3SpaDhDKuYL8Z1YZhG14SPzP_jTSG89hQbi8IUoTWk0R3sgO1S7Yao' }).then((currentToken) => {
-  if (currentToken) {
-    // Send the token to your server and update the UI if necessary
-    console.log(currentToken)
-            updateDoc(doc(db, "users", currentUser.uid),{
-            currentToken,
-       })
-    // ...
-  } else {
-    // Show permission request UI
-    console.log('No registration token available. Request permission to generate one.');
-    // ...
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  // ...
-});
-  
 
 useEffect(() => {
   pic()

@@ -1108,3 +1108,15 @@ input:checked + .slider:before {
   width: 100%;
   height: 50%;
 }
+
+
+.third-col{
+  display: grid;
+  place-items: center;
+}
+.newmessageball{
+  background-color: blue;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+}

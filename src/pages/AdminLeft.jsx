@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 import logobg from "../images/logobg.jpg"
+import OneSignal from 'react-onesignal';
 import { signOut, updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, EmailAuthCredential } from 'firebase/auth';
 import { useEffect } from 'react';
 import { ChatContext } from '../context/chatContext';
@@ -42,12 +43,36 @@ const AdminLeft = () => {
     const [percent, setPercent] = useState()
 const [file, setFile] = useState()
 
+const [seenArray, setSeenArray] = useState()
+
     async function changePic(e) {
 
 setLoading(true);
 setFile(e.target.files[0]);
 
 }
+
+useEffect(() => {
+  const getChats = () => {
+    const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+      setChats(doc.data());
+    });
+    console.log(currentUser.uid)
+    getDoc(doc(db, "seen", currentUser.uid)).then(docSnap => {
+      if (docSnap.exists()) {
+        setSeenArray(docSnap.data(), ()=>{
+        });
+      } else {
+        console.log("No such document!");
+      }
+    })
+
+    return () => {
+      unsub();
+    };
+  };
+  currentUser.uid && getChats();
+}, [currentUser.uid, seenArray]);
 
 useEffect(() => {
   pic()
@@ -112,9 +137,6 @@ function fetchUserData() {
 }
  
 
-adminInfo && console.log(adminInfo, user)
-user && console.log(adminInfo, user)
-
 function requestPermission() {
   console.log('Requesting permission...');
   Notification.requestPermission().then((permission) => {
@@ -122,7 +144,10 @@ function requestPermission() {
       console.log('Notification permission granted.');}
     })
 }
+useEffect(() => {
   requestPermission()
+}, [])
+
 
 
     const handleSearch = async () => {
@@ -169,7 +194,26 @@ function requestPermission() {
 }
 
 const openChat = (u) => {
-  dispatch({ type: "CHANGE_USER", payload: u });
+  dispatch({ type: "CHANGE_USER", payload: u.userInfo });
+  const combinedId =  currentUser.uid + u.userInfo.uid;
+  console.log(u.userInfo.uid)
+  console.log(seenArray)
+  console.log(seenArray[u.userInfo.uid])
+  getDoc(doc(db, "seen", currentUser.uid)).then((seenDoc) => {
+    if (seenDoc.exists()) {
+      updateDoc(doc(db, "seen", currentUser.uid), {
+        [u.userInfo.uid]: "true"
+      });
+    } else {
+      setDoc(doc(db, "seen", currentUser.uid), {
+        [u.userInfo.uid]: "true"
+      });
+    }
+  });
+  
+  
+  
+
   document.getElementById("headerRight").style.display = "grid"
   console.log(window.screen.availWidth)
   if (window.screen.availWidth < "900") {
@@ -194,6 +238,35 @@ function openProfileSetting() {
   
 }
 
+const requestNotificationPermission = () => {
+  OneSignal.getUserId().then(userId => {
+    userId && updateDoc(doc(db, "admins", currentUser.uid),{
+      userId,
+      })
+      
+
+  });
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        // Permission granted, handle accordingly
+        // Initialize OneSignal
+        OneSignal.getUserId().then(userId => {
+          userId && updateDoc(doc(db, "admins", currentUser.uid),{
+            userId,
+            })
+            
+
+        });
+      
+      }
+    });
+  }
+};
+
+useEffect(() => {
+  requestNotificationPermission()
+}, [currentUser])
 function settingBack() {
   document.getElementById("settingContainer").style.display = "grid"
   document.getElementById("mainSetting").style.display = "grid"
@@ -286,35 +359,9 @@ const handleSelect = async (e) => {
 }
 
 
-useEffect(() => {
-  const getChats = () => {
-    const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
-      setChats(doc.data());
-    });
 
-    return () => {
-      unsub();
-    };
-    
-  };
-  currentUser.uid && getChats();
-}, [currentUser.uid]);
 
 const [users, setUsers] = useState([])
-
-function changeDetails() {
-  console.log(users)
-
-}
-
-function checkUsers () {
-    users && changeDetails()
-    console.log(Object.entries(chats))
-}
-
-chats && checkUsers()
-
-
 
 useEffect(() => {
   const getUsers = async() => {
@@ -323,7 +370,6 @@ useEffect(() => {
   // doc.data() is never undefined for query doc snapshots
   var data = doc.data();
   setUsers(arr => [...arr , data]);
-  users:console.log(users)
 });
     
   };
@@ -335,6 +381,8 @@ useEffect(() => {
 function openAdmins() {
   document.getElementById("users").classList.toggle("translatefull")
 }
+
+
 
 function closeProfile() {
   document.getElementById("mainSetting").style.display = "none"
@@ -356,7 +404,6 @@ useEffect(() => {
 
 const handleProfileSubmit = async (e) => {
   e.preventDefault()
-  console.log(adminInfo)
   let displayName = e.target[1].value
   await updateDoc(doc(db, "admins", currentUser.uid),{
     displayName,
@@ -391,9 +438,14 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
   // ...
   alert("you have entered an incorrect password")
 });
-
- 
 }
+
+
+
+
+
+
+
 
     return ( 
 
@@ -411,13 +463,15 @@ reauthenticateWithCredential(currentUser, credential).then(() => {
 
 {adminInfo && <div className="messages messagesone">
     {chats && Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
-          <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1].userInfo)}>
+          <div className="message-item" key={chat[0]} onClick={() => openChat(chat[1])}>
             <div className="first-col"><img src={users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].photoURL} alt="" /></div>
-            <div className="second-col">
+            <div className="second-col">    
             <div className="first-row">{users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].firstName +" " + users[users.findIndex(usar => usar.uid == chat[1].userInfo.uid)].lastName}</div>
-                <div className="second-row">{users[users.findIndex(usar => usar.uid === chat[1].userInfo.uid)].lastMessage}</div>
+            <div className="second-row">
+            {chat[1].lastMessage && chat[1].lastMessage.text ? chat[1].lastMessage.text : ''}
+              </div>
             </div>
-            <div className="third-col"></div>
+            <div className="third-col">{seenArray && seenArray[chat[1].userInfo.uid] && seenArray[chat[1].userInfo.uid] === "false"?<span className='newmessageball'></span>:<span></span>}</div>
         </div>
         ))}
     </div>}

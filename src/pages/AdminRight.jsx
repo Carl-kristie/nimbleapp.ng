@@ -85,7 +85,47 @@ const AdminRight = () => {
       
     } 
 
+    const docRef = doc(db, "users", data.user.uid);
+    const docSnap = await getDoc(docRef);
 
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data().userId);
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+    const userId = docSnap.data().userId
+
+    const sendNotificationToPlayer = () => {
+      const apiKey = 'NjdjZjhjNjQtYjFmMy00NzE2LTg4MzAtYjAxMmJhMDk3Yjhl';
+      console.log(userId)
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${apiKey}`,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          app_id: "e9a0dd62-7875-4412-bd6e-1669e538a979",
+          include_player_ids: [userId], // Replace with the desired player ID(s)
+          contents: {
+            en: "New Message: File",
+          },
+          name: 'INTERNAL_CAMPAIGN_NAME',
+        }),
+      };
+    
+      fetch('https://onesignal.com/api/v1/notifications', requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Notification sent:', data);
+        })
+        .catch(error => {
+          console.error('Error sending notification:', error);
+        });
+    };
+   userId && sendNotificationToPlayer()
   }
 
  
@@ -133,6 +173,59 @@ const [users, setUsers] = useState([])
           },
           [data.chatId + ".date"]: serverTimestamp(),
         });
+        const seenDoc = await getDoc(doc(db, "seen", currentUser.uid));
+        if (seenDoc.exists()) {
+          updateDoc(doc(db, "seen", data.user.uid), {
+            [currentUser.uid]: "false"
+          });
+        } else {
+          setDoc(doc(db, "seen", data.user.uid), {
+            [currentUser.uid]: "false"
+          });
+        }
+        const docRef = doc(db, "users", data.user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data().userId);
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+        console.log(data.user.userId)
+        const userId = docSnap.data().userId
+
+        const sendNotificationToPlayer = () => {
+          const apiKey = 'NjdjZjhjNjQtYjFmMy00NzE2LTg4MzAtYjAxMmJhMDk3Yjhl';
+          console.log(userId)
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${apiKey}`,
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+              app_id: "e9a0dd62-7875-4412-bd6e-1669e538a979",
+              include_player_ids: [userId], // Replace with the desired player ID(s)
+              contents: {
+                en: "New Message: " + text,
+              },
+              name: 'INTERNAL_CAMPAIGN_NAME',
+            }),
+          };
+        
+          fetch('https://onesignal.com/api/v1/notifications', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+              console.log('Notification sent:', data);
+            })
+            .catch(error => {
+              console.error('Error sending notification:', error);
+            });
+        };
+       userId && sendNotificationToPlayer()
+        
     }
     useEffect(() => {
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -172,11 +265,8 @@ async function changePic(e) {
 }
 
 
-OneSignalReact.getUserId().then(userId => {
-  updateDoc(doc(db, "admins", currentUser.uid),{
-    userId,
-    })
-});
+
+
 
 
 function pic(e) {
