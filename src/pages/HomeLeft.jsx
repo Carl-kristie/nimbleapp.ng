@@ -506,7 +506,7 @@ var d = new Date(0)
     
 <div className="messages users translatezero" id='users'>
       {admins?
-      admins.slice(0,3).map((element) => {
+      admins.slice(0,4).map((element) => {
         return <div className="message-item user-item" onClick={handleSelect} key={element.uid}>
       <img src={element.photoURL} alt="" className="profile-photo user-photo" />
       <div className="display-name">{element.displayName}</div>
