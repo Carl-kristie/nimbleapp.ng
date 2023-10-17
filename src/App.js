@@ -8,6 +8,8 @@ import RegisterAdmin from "./pages/RegisterAdmin";
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom"
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import stores from "../src/images/stores.jpg"
+import logo from "../src/images/nimble.png"
 
 
 

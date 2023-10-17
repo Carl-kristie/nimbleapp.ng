@@ -1120,3 +1120,43 @@ input:checked + .slider:before {
   height: 1em;
   border-radius: 50%;
 }
+
+
+.App{
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  height: 100vh;
+}
+
+.cs-container{
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 43%;
+}
+.cs-logo{
+  transform: scale(.6);
+  width: 100%;
+}
+
+.cs-stores{
+  transform: scale(.8);
+  width: 100%;
+}
+
+@media screen and (min-width: 900px) {
+    .App{
+      display: grid;
+      justify-content: center;
+      align-items:start;
+    }
+
+    .cs-container{
+      transform: scale(.5);
+    }
+    .cs-text{
+      font-size: 100px;
+    }
+}
